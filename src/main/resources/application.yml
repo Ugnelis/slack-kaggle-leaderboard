@@ -1,0 +1,6 @@
+leaderboard:
+  webhook: 'https://hooks.slack.com/services/T00000000/B00000000/XXXXXXXXXXXXXXXXXXXXXXXX'
+  channel: '#channel'
+  contest-id: 'contest-id'
+  team-id: 'team-id'
+  check-rate-ms: 5000
