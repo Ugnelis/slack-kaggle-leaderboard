@@ -48,10 +48,11 @@ public class LeaderBoardService {
         }
 
         int previousPlace = place;
-        int difference = previousPlace - place;
 
         place = scrapPlace()
-                .orElse(previousPlace);
+                .orElse(0);
+
+        int difference = previousPlace - place;
 
         if (previousPlace < place) {
             sendMessage(buildMessage("*-" + difference + "* Current place *" + place + "*"));
