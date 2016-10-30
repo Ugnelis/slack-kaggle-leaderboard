@@ -47,15 +47,21 @@ public class LeaderBoardService {
             sendMessage(buildMessage("Current place *" + place + "*"));
         }
 
+        int newPlace = scrapPlace()
+                .orElse(0);
+
+        // If place is 0 than is the error
+        if (newPlace == 0)
+            return;
+
         int previousPlace = place;
 
-        place = scrapPlace()
-                .orElse(0);
+        place = newPlace;
 
         int difference = previousPlace - place;
 
         if (previousPlace < place) {
-            sendMessage(buildMessage("*-" + difference + "* Current place *" + place + "*"));
+            sendMessage(buildMessage("*" + difference + "* Current place *" + place + "*"));
         }
 
         if (previousPlace > place) {
