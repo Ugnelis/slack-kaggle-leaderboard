@@ -14,8 +14,9 @@ public class ScheduledTasks {
         this.leaderBoardService = leaderBoardService;
     }
 
+    // TODO start when POST "/start", stop when POST "/stop"
     @Scheduled(fixedDelayString = "${leaderboard.check-rate-ms}")
-    public void reportCurrentTime() {
+    public void checkChanges() {
         leaderBoardService.checkChanges();
     }
 }

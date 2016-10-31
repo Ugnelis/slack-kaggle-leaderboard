@@ -39,6 +39,27 @@ public class LeaderBoardService {
         this.teamId = teamId;
     }
 
+
+    public SlackJson getCurrentPlace() {
+        int place = scrapPlace().orElse(0);
+
+        if (place == 0) {
+            getCurrentPlace();
+        }
+
+        return new SlackJson("Current place: *" + place + "*");
+    }
+
+    public SlackJson startPlaceTracking() {
+        // TODO start place tracking schedule
+        return new SlackJson("Started place tracking!");
+    }
+
+    public SlackJson stopPlaceTracking() {
+        // TODO stop place tracking schedule
+        return new SlackJson("Stopped place tracking!");
+    }
+
     public void checkChanges() {
         if (place == 0) {
             place = scrapPlace()
