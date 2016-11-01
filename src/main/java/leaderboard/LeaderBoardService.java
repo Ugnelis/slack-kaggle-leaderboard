@@ -20,20 +20,20 @@ public class LeaderBoardService {
 
     private static final Logger LOG = LoggerFactory.getLogger(LeaderBoardService.class);
 
-    private final LeaderboardRepository leaderboardRepository;
+    private final LeaderBoardRepository leaderBoardRepository;
     private final String channelName;
     private final String webhookURL;
     private final String contestid;
     private final String teamId;
 
     @Autowired
-    public LeaderBoardService(LeaderboardRepository leaderboardRepository,
+    public LeaderBoardService(LeaderBoardRepository leaderBoardRepository,
                               @Value("${leaderboard.channel}") String channelName,
                               @Value("${leaderboard.webhook}") String webhookURL,
                               @Value("${leaderboard.contest-id}") String contestId,
                               @Value("${leaderboard.team-id}") String teamId) {
 
-        this.leaderboardRepository = leaderboardRepository;
+        this.leaderBoardRepository = leaderBoardRepository;
         this.channelName = channelName;
         this.webhookURL = webhookURL;
         this.contestid = contestId;
@@ -51,17 +51,17 @@ public class LeaderBoardService {
     }
 
     public SlackJson startPlaceTracking() {
-        leaderboardRepository.setEnablePlaceChecking(true);
+        leaderBoardRepository.setEnablePlaceChecking(true);
         return new SlackJson("Started place tracking!");
     }
 
     public SlackJson stopPlaceTracking() {
-        leaderboardRepository.setEnablePlaceChecking(false);
+        leaderBoardRepository.setEnablePlaceChecking(false);
         return new SlackJson("Stopped place tracking!");
     }
 
     public void checkChanges() {
-        int place = leaderboardRepository.getPlace();
+        int place = leaderBoardRepository.getPlace();
 
         if (place == 0) {
             place = scrapPlace()
@@ -90,7 +90,7 @@ public class LeaderBoardService {
         if (previousPlace > place) {
             sendMessage(buildMessage("*+" + difference + "* Current place *" + place + "*"));
         }
-        leaderboardRepository.setPlace(place);
+        leaderBoardRepository.setPlace(place);
     }
 
     private Optional<Integer> scrapPlace() {

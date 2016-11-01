@@ -3,9 +3,9 @@ package leaderboard;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public class LeaderboardRepository {
+public class LeaderBoardRepository {
 
-    private boolean enablePlaceChecking = true;
+    private boolean enablePlaceChecking = false;
     private int place = 0;
 
     public boolean isEnablePlaceChecking() {
