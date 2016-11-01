@@ -7,15 +7,21 @@ import org.springframework.stereotype.Component;
 @Component
 public class ScheduledTasks {
 
+    private final LeaderBoardRepository leaderBoardRepository;
     private final LeaderBoardService leaderBoardService;
 
     @Autowired
-    public ScheduledTasks(LeaderBoardService leaderBoardService) {
+    public ScheduledTasks(LeaderBoardRepository leaderboardRepository,
+                          LeaderBoardService leaderBoardService) {
+
+        this.leaderBoardRepository = leaderboardRepository;
         this.leaderBoardService = leaderBoardService;
     }
 
     @Scheduled(fixedDelayString = "${leaderboard.check-rate-ms}")
-    public void reportCurrentTime() {
-        leaderBoardService.checkChanges();
+    public void checkChanges() {
+        if (leaderBoardRepository.isEnablePlaceChecking()) {
+            leaderBoardService.checkChanges();
+        }
     }
 }

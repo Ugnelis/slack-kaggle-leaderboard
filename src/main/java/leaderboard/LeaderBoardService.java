@@ -20,26 +20,49 @@ public class LeaderBoardService {
 
     private static final Logger LOG = LoggerFactory.getLogger(LeaderBoardService.class);
 
+    private final LeaderBoardRepository leaderBoardRepository;
     private final String channelName;
     private final String webhookURL;
     private final String contestid;
     private final String teamId;
 
-    private int place;
-
     @Autowired
-    public LeaderBoardService(@Value("${leaderboard.channel}") String channelName,
+    public LeaderBoardService(LeaderBoardRepository leaderBoardRepository,
+                              @Value("${leaderboard.channel}") String channelName,
                               @Value("${leaderboard.webhook}") String webhookURL,
                               @Value("${leaderboard.contest-id}") String contestId,
                               @Value("${leaderboard.team-id}") String teamId) {
 
+        this.leaderBoardRepository = leaderBoardRepository;
         this.channelName = channelName;
         this.webhookURL = webhookURL;
         this.contestid = contestId;
         this.teamId = teamId;
     }
 
+    public SlackJson getCurrentPlace() {
+        int place = scrapPlace().orElse(0);
+
+        if (place == 0) {
+            getCurrentPlace();
+        }
+
+        return new SlackJson("Current place: *" + place + "*");
+    }
+
+    public SlackJson startPlaceTracking() {
+        leaderBoardRepository.setEnablePlaceChecking(true);
+        return new SlackJson("Started place tracking!");
+    }
+
+    public SlackJson stopPlaceTracking() {
+        leaderBoardRepository.setEnablePlaceChecking(false);
+        return new SlackJson("Stopped place tracking!");
+    }
+
     public void checkChanges() {
+        int place = leaderBoardRepository.getPlace();
+
         if (place == 0) {
             place = scrapPlace()
                     .orElse(0);
@@ -67,6 +90,7 @@ public class LeaderBoardService {
         if (previousPlace > place) {
             sendMessage(buildMessage("*+" + difference + "* Current place *" + place + "*"));
         }
+        leaderBoardRepository.setPlace(place);
     }
 
     private Optional<Integer> scrapPlace() {
